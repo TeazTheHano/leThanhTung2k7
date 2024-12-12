@@ -1,6 +1,6 @@
 // system import
 import React, { Component, ComponentType, useMemo, useState } from 'react';
-import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle } from 'react-native';
+import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle, TextStyle, FlexStyle } from 'react-native';
 
 // style import
 import styles from './stylesheet';
@@ -393,75 +393,149 @@ interface SearchBoxState {
 
 }
 
-// export class BoardingInput extends Component<{
-//     title: string,
-//     supFncTitle?: string,
-//     supFncTitleColor?: string,
-//     supFnc?: () => void,
-//     subTitle?: string,
-//     placeholder?: string,
-//     value: string | number,
-//     isNumber?: boolean,
-//     onChgText: (value: string | number) => void,
-//     CustomStyleClass?: any,
-//     CustomStyleText?: any,
-//     CustomStyleInput?: any,
-//     contentType?: string
-//     hideContent?: boolean,
-//     hideContentFnc?: (value: boolean) => void,
-//     autoCap?: 'none' | 'characters' | 'words' | 'sentences',
-//     maxLength?: number,
-//     activeColor?: string,
-//     passiveColor?: string,
-//     tileColor?: string,
-// }> {
+/**
+ * @textClass - use the RegularText component instead
+ */
+export class BoardingInput extends Component<{
+    title: string,
+    value: string | number,
+    onChgText: (value: string | number) => void,
+    placeholder?: string,
+    // 
+    supFncTitle?: string,
+    supFncTitleColor?: string,
+    supFnc?: () => void,
+    subTitle?: string,
+    // 
+    isNumber?: boolean,
+    contentType?: string
+    hideContent?: boolean,
+    hideContentFnc?: (value: boolean) => void,
+    autoCap?: 'none' | 'characters' | 'words' | 'sentences',
+    maxLength?: number,
+    // 
+    CustomStyleClass?: ViewStyle[] | ImageStyle[] | FlexStyle[],
+    CustomStyleText?: TextStyle[],
+    CustomStyleInput?: ViewStyle[] | ImageStyle[] | FlexStyle[],
+    // 
+    activeColor?: string,
+    passiveColor?: string,
+    tileColor?: string,
+    // 
+    textClass?: ComponentType<{ children: React.ReactNode }>
+}> {
 
-//     render() {
-//         const { title, placeholder, value, onChgText, CustomStyleClass, CustomStyleInput, CustomStyleText, contentType, subTitle, supFnc, supFncTitle, hideContent, hideContentFnc, autoCap, maxLength, supFncTitleColor, activeColor, passiveColor, tileColor } = this.props;
-//         const isNumber = this.props.isNumber ? this.props.isNumber : false;
+    render() {
+        const { title, placeholder, value, onChgText, CustomStyleClass, CustomStyleInput, CustomStyleText, contentType, subTitle, supFnc, supFncTitle, hideContent, hideContentFnc, autoCap, maxLength, supFncTitleColor, activeColor, passiveColor, tileColor, textClass } = this.props;
+        const isNumber = this.props.isNumber ? this.props.isNumber : false;
+        const CTEXT = textClass ? textClass : Text;
 
-//         function changFnc(value: string | number) {
-//             if (isNumber) {
-//                 onChgText(parseInt(value as string));
-//             } else {
-//                 onChgText(value);
-//             }
-//         }
+        function changFnc(value: string | number) {
+            if (isNumber) {
+                onChgText(parseInt(value as string));
+            } else {
+                onChgText(value);
+            }
+        }
 
-//         return (
-//             <View style={[styles.flexColCenter, styles.gap4vw, styles.positionRelative, CustomStyleClass]}>
-//                 {title ?
-//                     <Nunito24Bold style={[{ color: tileColor }, CustomStyleText]}>{title}</Nunito24Bold>
-//                     : null}
-//                 <TextInput
-//                     placeholder={placeholder ? placeholder : 'Type here'}
-//                     value={value ? value.toString() : ''}
-//                     onChangeText={changFnc}
-//                     placeholderTextColor={passiveColor as string}
-//                     secureTextEntry={hideContent ? hideContent : false}
-//                     keyboardType={isNumber ? 'numeric' : 'default'}
-//                     autoCapitalize={autoCap ? autoCap : 'sentences'}
-//                     textContentType={contentType as TextInputProps['textContentType']}
-//                     maxLength={maxLength ? maxLength : undefined}
-//                     style={[styles.w100, styles.border1, styles.textCenter, { borderColor: value ? activeColor : passiveColor, padding: vw(2.5), fontFamily: value ? 'Nunito-Bold' : 'Nunito-Regular', fontSize: vw(4.5), borderRadius: vw(2), color: value ? activeColor : passiveColor }, CustomStyleInput]} />
-//                 {hideContentFnc ?
-//                     <TouchableOpacity
-//                         onPress={() => { hideContentFnc && hideContentFnc(!hideContent) }}
-//                         style={[styles.padding2vw, styles.positionAbsolute, { bottom: -vw(12) }]}>
-//                         <Nunito14Reg style={{ color: activeColor }}>{hideContent ? `Show ${contentType}` : `Hide ${contentType}`}</Nunito14Reg>
-//                     </TouchableOpacity>
-//                     : null}
-//                 {subTitle ?
-//                     <View style={[styles.flexRowCenter]}>
-//                         <Nunito16Reg style={[{ color: passiveColor }]}>{subTitle}</Nunito16Reg>
-//                         <TouchableOpacity onPress={supFnc}><Nunito16Reg style={[styles.textUnderline, { color: supFncTitleColor ? supFncTitleColor : clrStyle.black }]}>{supFncTitle}</Nunito16Reg></TouchableOpacity>
-//                     </View>
-//                     : null
-//                 }
-//             </View>
-//         );
-//     }
-// }
+        return (
+            <View style={[styles.flexColCenter, styles.gap4vw, styles.positionRelative, CustomStyleClass]}>
+                {title ?
+                    <CTEXT style={[{ color: tileColor, fontWeight: 'bold' }, CustomStyleText]}>{title}</CTEXT>
+                    : null}
+                <TextInput
+                    placeholder={placeholder ? placeholder : 'Type here'}
+                    value={value ? value.toString() : ''}
+                    onChangeText={changFnc}
+                    placeholderTextColor={passiveColor as string}
+                    secureTextEntry={hideContent ? hideContent : false}
+                    keyboardType={isNumber ? 'numeric' : 'default'}
+                    autoCapitalize={autoCap ? autoCap : 'sentences'}
+                    textContentType={contentType as TextInputProps['textContentType']}
+                    maxLength={maxLength ? maxLength : undefined}
+                    style={[styles.w100, styles.border1, styles.textCenter, { borderColor: value ? activeColor : passiveColor, padding: vw(2.5), fontFamily: value ? 'Nunito-Bold' : 'Nunito-Regular', fontSize: vw(4.5), borderRadius: vw(2), color: value ? activeColor : passiveColor }, CustomStyleInput]} />
+                {hideContentFnc ?
+                    <TouchableOpacity
+                        onPress={() => { hideContentFnc && hideContentFnc(!hideContent) }}
+                        style={[styles.padding2vw, styles.positionAbsolute, { bottom: -vw(12) }]}>
+                        <Text style={{ color: activeColor, fontSize: vw(3) }}>{hideContent ? `Show ${contentType}` : `Hide ${contentType}`}</Text>
+                    </TouchableOpacity>
+                    : null}
+                {subTitle ?
+                    <View style={[styles.flexRowCenter]}>
+                        <CTEXT style={[{ color: passiveColor }]}>{subTitle}</CTEXT>
+                        <TouchableOpacity onPress={supFnc}><CTEXT style={[styles.textUnderline, { color: supFncTitleColor ? supFncTitleColor : clrStyle.black }]}>{supFncTitle}</CTEXT></TouchableOpacity>
+                    </View>
+                    : null
+                }
+            </View>
+        );
+    }
+}
+
+export class BoardingInputWithInlineIcon extends Component<{
+    value: string | number,
+    onChgText: (value: string | number) => void,
+    placeholder?: string,
+    inputIcon?: any,
+    // 
+    isNumber?: boolean,
+    contentType?: string
+    hideContent?: boolean,
+    hideContentFnc?: (value: boolean) => void,
+    autoCap?: 'none' | 'characters' | 'words' | 'sentences',
+    maxLength?: number,
+    // 
+    CustomStyleClass?: ViewStyle[] | ImageStyle[] | FlexStyle[],
+    CustomStyleText?: TextStyle[],
+    CustomStyleInput?: ViewStyle[] | ImageStyle[] | FlexStyle[],
+    // 
+    activeColor?: string,
+    passiveColor?: string,
+    tileColor?: string,
+    // 
+    textClass?: ComponentType<{ children: React.ReactNode }>
+}> {
+
+    render() {
+        const { placeholder, value, onChgText, inputIcon, CustomStyleClass, CustomStyleInput, CustomStyleText, contentType, hideContent, hideContentFnc, autoCap, maxLength, activeColor, passiveColor, tileColor, textClass } = this.props;
+        const isNumber = this.props.isNumber ? this.props.isNumber : false;
+        const CTEXT = textClass ? textClass : Text;
+
+        function changFnc(value: string | number) {
+            if (isNumber) {
+                onChgText(parseInt(value as string));
+            } else {
+                onChgText(value);
+            }
+        }
+
+        return (
+            <View style={[styles.gap4vw, styles.positionRelative, styles.flexRowBetweenCenter, CustomStyleClass]}>
+                {inputIcon ?
+                    <View style={[styles.paddingRight2vw]}>{inputIcon}</View> : null}
+                <TextInput
+                    placeholder={placeholder ? placeholder : 'Type here'}
+                    value={value ? value.toString() : ''}
+                    onChangeText={changFnc}
+                    placeholderTextColor={passiveColor as string}
+                    secureTextEntry={hideContent ? hideContent : false}
+                    keyboardType={isNumber ? 'numeric' : 'default'}
+                    autoCapitalize={autoCap ? autoCap : 'sentences'}
+                    textContentType={contentType as TextInputProps['textContentType']}
+                    maxLength={maxLength ? maxLength : undefined}
+                    style={[styles.flex1, { color: value ? activeColor : passiveColor }, CustomStyleInput]} />
+                {hideContentFnc ?
+                    <TouchableOpacity
+                        onPress={() => { hideContentFnc && hideContentFnc(!hideContent) }}
+                        style={[styles.paddingLeft2vw,]}>
+                        {!hideContent ? SVG.visibleIcon(vw(6), vw(6), activeColor) : SVG.inVisibleIcon(vw(6), vw(6), activeColor)}
+                    </TouchableOpacity>
+                    : null}
+            </View>
+        );
+    }
+}
 
 export class ProcessBarSelfMade extends Component<{
     barLength: number,
@@ -586,9 +660,9 @@ export class LowBtn extends Component<{
 }> {
     render() {
         const { title, onPress, bgColor, fontColor, icon, round, CustomStyle, FontElement } = this.props;
-        const Font = FontElement ? FontElement : CTEXT.Roboto16Bold;
+        const Font = FontElement ? FontElement : Text;
         return (
-            <TouchableOpacity onPress={onPress} style={[styles.flexRowCenter, styles.gap3vw, styles.borderRadius100, styles.shadowW0H1Black, styles.w90, styles.alignSelfCenter, { backgroundColor: bgColor ? bgColor : clrStyle.main2, padding: vw(3.75), borderRadius: round ? round : vw(1000) }, CustomStyle ? CustomStyle : null]}>
+            <TouchableOpacity onPress={onPress} style={[styles.flexRowCenter, styles.gap3vw, styles.borderRadius100, styles.shadowW0H1Black, styles.w90, styles.alignSelfCenter, { backgroundColor: bgColor ? bgColor : 'white', padding: vw(3.75), borderRadius: round ? round : vw(1000) }, CustomStyle ? CustomStyle : null]}>
                 {icon ? icon : null}
                 <Font style={{ color: fontColor ? fontColor : clrStyle.white, }}>{title}</Font>
             </TouchableOpacity>
@@ -596,162 +670,162 @@ export class LowBtn extends Component<{
     }
 }
 
-export class BoardingInput extends Component<{
-    title: string,
-    supFncTitle?: string,
-    supFncTitleColor?: string,
-    supFnc?: () => void,
-    subTitle?: string,
-    placeholder?: string,
-    value: string | number,
-    isNumber?: boolean,
-    onChgText: (value: string | number) => void,
-    CustomStyleClass?: any,
-    CustomStyleText?: any,
-    CustomStyleInput?: any,
-    contentType?: string
-    hideContent?: boolean,
-    hideContentFnc?: (value: boolean) => void,
-    autoCap?: 'none' | 'characters' | 'words' | 'sentences',
-    maxLength?: number,
-}> {
+// export class BoardingInput extends Component<{
+//     title: string,
+//     supFncTitle?: string,
+//     supFncTitleColor?: string,
+//     supFnc?: () => void,
+//     subTitle?: string,
+//     placeholder?: string,
+//     value: string | number,
+//     isNumber?: boolean,
+//     onChgText: (value: string | number) => void,
+//     CustomStyleClass?: any,
+//     CustomStyleText?: any,
+//     CustomStyleInput?: any,
+//     contentType?: string
+//     hideContent?: boolean,
+//     hideContentFnc?: (value: boolean) => void,
+//     autoCap?: 'none' | 'characters' | 'words' | 'sentences',
+//     maxLength?: number,
+// }> {
 
-    render() {
-        const { title, placeholder, value, onChgText, CustomStyleClass, CustomStyleInput, CustomStyleText, contentType, subTitle, supFnc, supFncTitle, hideContent, hideContentFnc, autoCap, maxLength, supFncTitleColor } = this.props;
-        const isNumber = this.props.isNumber ? this.props.isNumber : false;
+//     render() {
+//         const { title, placeholder, value, onChgText, CustomStyleClass, CustomStyleInput, CustomStyleText, contentType, subTitle, supFnc, supFncTitle, hideContent, hideContentFnc, autoCap, maxLength, supFncTitleColor } = this.props;
+//         const isNumber = this.props.isNumber ? this.props.isNumber : false;
 
-        function changFnc(value: string | number) {
-            if (isNumber) {
-                onChgText(parseInt(value as string));
-            } else {
-                onChgText(value);
-            }
-        }
+//         function changFnc(value: string | number) {
+//             if (isNumber) {
+//                 onChgText(parseInt(value as string));
+//             } else {
+//                 onChgText(value);
+//             }
+//         }
 
-        return (
-            <View style={[styles.flexColCenter, styles.gap4vw, styles.positionRelative, CustomStyleClass]}>
-                {title ?
-                    <CTEXT.Nunito24Bold style={[{ color: clrStyle.main2 }, CustomStyleText]}>{title}</CTEXT.Nunito24Bold>
-                    : null}
-                <TextInput
-                    placeholder={placeholder ? placeholder : 'Type here'}
-                    value={value ? value.toString() : ''}
-                    onChangeText={changFnc}
-                    placeholderTextColor={clrStyle.grey1}
-                    secureTextEntry={hideContent ? hideContent : false}
-                    keyboardType={isNumber ? 'numeric' : 'default'}
-                    autoCapitalize={autoCap ? autoCap : 'sentences'}
-                    textContentType={contentType as TextInputProps['textContentType']}
-                    maxLength={maxLength ? maxLength : undefined}
-                    style={[styles.w100, styles.border1, styles.textCenter, { borderColor: value ? clrStyle.main2 : clrStyle.grey1, padding: vw(2.5), fontFamily: value ? 'Nunito-Bold' : 'Nunito-Regular', fontSize: vw(4.5), borderRadius: vw(2), color: value ? clrStyle.main2 : clrStyle.grey2 }, CustomStyleInput]} />
-                {hideContentFnc ?
-                    <TouchableOpacity
-                        onPress={() => { hideContentFnc && hideContentFnc(!hideContent) }}
-                        style={[styles.padding2vw, styles.positionAbsolute, { bottom: -vw(12) }]}>
-                        <CTEXT.Nunito14Reg style={{ color: clrStyle.grey2 }}>{hideContent ? `Show ${contentType}` : `Hide ${contentType}`}</CTEXT.Nunito14Reg>
-                    </TouchableOpacity>
-                    : null}
-                {subTitle ?
-                    <View style={[styles.flexRowCenter]}>
-                        <CTEXT.Nunito16Reg style={[{ color: clrStyle.grey2 }]}>{subTitle}</CTEXT.Nunito16Reg>
-                        <TouchableOpacity onPress={supFnc}><CTEXT.Nunito16Reg style={[styles.textUnderline, { color: supFncTitleColor ? supFncTitleColor : clrStyle.grey2 }]}>{supFncTitle}</CTEXT.Nunito16Reg></TouchableOpacity>
-                    </View>
-                    : null
-                }
-            </View>
-        );
-    }
-}
+//         return (
+//             <View style={[styles.flexColCenter, styles.gap4vw, styles.positionRelative, CustomStyleClass]}>
+//                 {title ?
+//                     <CTEXT.Nunito24Bold style={[{ color: clrStyle.main2 }, CustomStyleText]}>{title}</CTEXT.Nunito24Bold>
+//                     : null}
+//                 <TextInput
+//                     placeholder={placeholder ? placeholder : 'Type here'}
+//                     value={value ? value.toString() : ''}
+//                     onChangeText={changFnc}
+//                     placeholderTextColor={clrStyle.grey1}
+//                     secureTextEntry={hideContent ? hideContent : false}
+//                     keyboardType={isNumber ? 'numeric' : 'default'}
+//                     autoCapitalize={autoCap ? autoCap : 'sentences'}
+//                     textContentType={contentType as TextInputProps['textContentType']}
+//                     maxLength={maxLength ? maxLength : undefined}
+//                     style={[styles.w100, styles.border1, styles.textCenter, { borderColor: value ? clrStyle.main2 : clrStyle.grey1, padding: vw(2.5), fontFamily: value ? 'Nunito-Bold' : 'Nunito-Regular', fontSize: vw(4.5), borderRadius: vw(2), color: value ? clrStyle.main2 : clrStyle.grey2 }, CustomStyleInput]} />
+//                 {hideContentFnc ?
+//                     <TouchableOpacity
+//                         onPress={() => { hideContentFnc && hideContentFnc(!hideContent) }}
+//                         style={[styles.padding2vw, styles.positionAbsolute, { bottom: -vw(12) }]}>
+//                         <CTEXT.Nunito14Reg style={{ color: clrStyle.grey2 }}>{hideContent ? `Show ${contentType}` : `Hide ${contentType}`}</CTEXT.Nunito14Reg>
+//                     </TouchableOpacity>
+//                     : null}
+//                 {subTitle ?
+//                     <View style={[styles.flexRowCenter]}>
+//                         <CTEXT.Nunito16Reg style={[{ color: clrStyle.grey2 }]}>{subTitle}</CTEXT.Nunito16Reg>
+//                         <TouchableOpacity onPress={supFnc}><CTEXT.Nunito16Reg style={[styles.textUnderline, { color: supFncTitleColor ? supFncTitleColor : clrStyle.grey2 }]}>{supFncTitle}</CTEXT.Nunito16Reg></TouchableOpacity>
+//                     </View>
+//                     : null
+//                 }
+//             </View>
+//         );
+//     }
+// }
 
-export class BoardingNavigation extends Component<{
-    fnc: (value: boolean) => void,
-    leftTitle: string,
-    rightTitle: string,
-    showGoBack: boolean,
-    currentStep: number,
-    dataLength: number,
-}> {
-    render() {
-        const { fnc, leftTitle, rightTitle, showGoBack, currentStep, dataLength } = this.props;
+// export class BoardingNavigation extends Component<{
+//     fnc: (value: boolean) => void,
+//     leftTitle: string,
+//     rightTitle: string,
+//     showGoBack: boolean,
+//     currentStep: number,
+//     dataLength: number,
+// }> {
+//     render() {
+//         const { fnc, leftTitle, rightTitle, showGoBack, currentStep, dataLength } = this.props;
 
-        return (
-            <View style={[styles.flexRowBetweenCenter, styles.marginTop2vw, styles.marginBottom8vw]}>
-                <TouchableOpacity
-                    onPress={() => { fnc(false) }}>
-                    <View style={[styles.borderRadius100, styles.wfit, { padding: vw(2.5), backgroundColor: currentStep > 0 ? clrStyle.white2 : clrStyle.grey2 }]}>
-                        {showGoBack ?
-                            <CTEXT.Nunito16Reg style={[styles.textUpperCase, styles.paddingH2vw, { color: clrStyle.black }]}>{leftTitle}</CTEXT.Nunito16Reg>
-                            :
-                            SVG.sharpLeftArrow(vw(6), vw(6), currentStep > 0 ? clrStyle.main2 : clrStyle.white)}
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => { fnc(true) }}>
-                    <View style={[styles.borderRadius100, styles.wfit, { padding: vw(2.5), backgroundColor: currentStep < dataLength - 1 ? clrStyle.main1 : clrStyle.main2 }]}>
-                        {currentStep < dataLength - 1 ?
-                            SVG.sharpRightArrow(vw(6), vw(6), currentStep < dataLength - 1 ? clrStyle.main2 : clrStyle.grey2)
-                            :
-                            <CTEXT.Nunito16Bold style={[styles.textUpperCase, styles.paddingH2vw, { color: clrStyle.white }]}>{rightTitle}</CTEXT.Nunito16Bold>
-                        }
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
-    }
-}
+//         return (
+//             <View style={[styles.flexRowBetweenCenter, styles.marginTop2vw, styles.marginBottom8vw]}>
+//                 <TouchableOpacity
+//                     onPress={() => { fnc(false) }}>
+//                     <View style={[styles.borderRadius100, styles.wfit, { padding: vw(2.5), backgroundColor: currentStep > 0 ? clrStyle.white2 : clrStyle.grey2 }]}>
+//                         {showGoBack ?
+//                             <CTEXT.Nunito16Reg style={[styles.textUpperCase, styles.paddingH2vw, { color: clrStyle.black }]}>{leftTitle}</CTEXT.Nunito16Reg>
+//                             :
+//                             SVG.sharpLeftArrow(vw(6), vw(6), currentStep > 0 ? clrStyle.main2 : clrStyle.white)}
+//                     </View>
+//                 </TouchableOpacity>
+//                 <TouchableOpacity
+//                     onPress={() => { fnc(true) }}>
+//                     <View style={[styles.borderRadius100, styles.wfit, { padding: vw(2.5), backgroundColor: currentStep < dataLength - 1 ? clrStyle.main1 : clrStyle.main2 }]}>
+//                         {currentStep < dataLength - 1 ?
+//                             SVG.sharpRightArrow(vw(6), vw(6), currentStep < dataLength - 1 ? clrStyle.main2 : clrStyle.grey2)
+//                             :
+//                             <CTEXT.Nunito16Bold style={[styles.textUpperCase, styles.paddingH2vw, { color: clrStyle.white }]}>{rightTitle}</CTEXT.Nunito16Bold>
+//                         }
+//                     </View>
+//                 </TouchableOpacity>
+//             </View>
+//         )
+//     }
+// }
 
-export class BoardingPicking extends Component<{
-    data: string[],
-    selected: string[],
-    setSelected: (value: string[]) => void,
-    maxLength?: number | undefined,
-    deleteFromOriginal?: string[],
-    deleteFromOtherSelected1?: string,
-    deleteFromOriginalFnc?: (value: string[]) => void,
-    deleteFromOtherSelectedFnc1?: (value: string) => void,
-    originalData?: string[],
-}> {
-    render() {
-        const { data, selected, setSelected, maxLength, originalData, deleteFromOriginal, deleteFromOriginalFnc, deleteFromOtherSelected1, deleteFromOtherSelectedFnc1 } = this.props;
-        const length = maxLength ? maxLength : data.length;
-        return (
-            <View style={[styles.flexRowStartCenter, styles.flexWrap, styles.gap4vw]}>
-                {data.map((item, index) => {
-                    return (
-                        <TouchableOpacity
-                            key={index}
-                            onPress={() => {
-                                if (selected.includes(item)) {
-                                    setSelected(selected.filter((value) => value !== item))
-                                    if (deleteFromOriginal && deleteFromOriginalFnc && !originalData?.includes(item)) {
-                                        deleteFromOriginalFnc(deleteFromOriginal.filter((value) => value !== item))
-                                    }
-                                    if (deleteFromOtherSelected1 && deleteFromOtherSelectedFnc1) {
-                                        if (deleteFromOtherSelected1.includes(`${item},`)) {
-                                            deleteFromOtherSelectedFnc1(deleteFromOtherSelected1.replace(`${item},`, ''))
-                                        } else {
-                                            deleteFromOtherSelectedFnc1(deleteFromOtherSelected1.replace(item, ''))
-                                        }
-                                    }
-                                } else {
-                                    if (selected.length < length!) {
-                                        setSelected([...selected, item])
-                                    }
-                                };
-                            }}
-                            style={[styles.wfit, styles.paddingV2vw, styles.paddingH4vw, styles.border1, { borderColor: selected.includes(item) ? clrStyle.main2 : clrStyle.grey1, borderRadius: vw(2), }]}>
-                            {selected.includes(item) ?
-                                <CTEXT.Nunito14ExBold style={[{ color: clrStyle.main2 }]}>{item}</CTEXT.Nunito14ExBold>
-                                :
-                                <CTEXT.Nunito14Reg style={[{ color: clrStyle.grey1 }]}>{item}</CTEXT.Nunito14Reg>
-                            }
-                        </TouchableOpacity>
-                    )
-                })}
-            </View>
-        )
-    }
-}
+// export class BoardingPicking extends Component<{
+//     data: string[],
+//     selected: string[],
+//     setSelected: (value: string[]) => void,
+//     maxLength?: number | undefined,
+//     deleteFromOriginal?: string[],
+//     deleteFromOtherSelected1?: string,
+//     deleteFromOriginalFnc?: (value: string[]) => void,
+//     deleteFromOtherSelectedFnc1?: (value: string) => void,
+//     originalData?: string[],
+// }> {
+//     render() {
+//         const { data, selected, setSelected, maxLength, originalData, deleteFromOriginal, deleteFromOriginalFnc, deleteFromOtherSelected1, deleteFromOtherSelectedFnc1 } = this.props;
+//         const length = maxLength ? maxLength : data.length;
+//         return (
+//             <View style={[styles.flexRowStartCenter, styles.flexWrap, styles.gap4vw]}>
+//                 {data.map((item, index) => {
+//                     return (
+//                         <TouchableOpacity
+//                             key={index}
+//                             onPress={() => {
+//                                 if (selected.includes(item)) {
+//                                     setSelected(selected.filter((value) => value !== item))
+//                                     if (deleteFromOriginal && deleteFromOriginalFnc && !originalData?.includes(item)) {
+//                                         deleteFromOriginalFnc(deleteFromOriginal.filter((value) => value !== item))
+//                                     }
+//                                     if (deleteFromOtherSelected1 && deleteFromOtherSelectedFnc1) {
+//                                         if (deleteFromOtherSelected1.includes(`${item},`)) {
+//                                             deleteFromOtherSelectedFnc1(deleteFromOtherSelected1.replace(`${item},`, ''))
+//                                         } else {
+//                                             deleteFromOtherSelectedFnc1(deleteFromOtherSelected1.replace(item, ''))
+//                                         }
+//                                     }
+//                                 } else {
+//                                     if (selected.length < length!) {
+//                                         setSelected([...selected, item])
+//                                     }
+//                                 };
+//                             }}
+//                             style={[styles.wfit, styles.paddingV2vw, styles.paddingH4vw, styles.border1, { borderColor: selected.includes(item) ? clrStyle.main2 : clrStyle.grey1, borderRadius: vw(2), }]}>
+//                             {selected.includes(item) ?
+//                                 <CTEXT.Nunito14ExBold style={[{ color: clrStyle.main2 }]}>{item}</CTEXT.Nunito14ExBold>
+//                                 :
+//                                 <CTEXT.Nunito14Reg style={[{ color: clrStyle.grey1 }]}>{item}</CTEXT.Nunito14Reg>
+//                             }
+//                         </TouchableOpacity>
+//                     )
+//                 })}
+//             </View>
+//         )
+//     }
+// }
 
 export class TopNav extends Component<{
     children?: React.ReactNode,
@@ -773,11 +847,11 @@ export class TopNav extends Component<{
                             <TouchableOpacity
                                 style={[styles.padding2vw]}
                                 onPress={returnPreScreenFnc}>
-                                {leftIcon ? leftIcon(vw(6), vw(6), clrStyle.grey1) : SVG.sharpLeftArrow(vw(6), vw(6), clrStyle.grey1)}
+                                {leftIcon ? leftIcon(vw(6), vw(6), clrStyle.black) : SVG.sharpLeftArrow(vw(6), vw(6), clrStyle.black)}
                             </TouchableOpacity>
                             : <View style={[{ width: vw(10), height: vw(10), }]} />
                         }
-                        {title ? <CTEXT.Nunito22Bold style={[styles.textCenter, styles.alignSelfCenter, { color: clrStyle.main2 }]}>{title}</CTEXT.Nunito22Bold> : null}
+                        {title ? <CTEXT.Title3 style={[styles.textCenter, styles.alignSelfCenter, { color: clrStyle.black }]}>{title}</CTEXT.Title3> : null}
                         {rightIcon ?
                             <TouchableOpacity
                                 style={[styles.padding2vw]}
@@ -827,25 +901,6 @@ export class BannerSliderWithCenter extends Component<{
                 style={customStyle}
                 contentContainerStyle={[styles.flexRowStartCenter, customContainerStyle]}
             />
-        )
-    }
-}
-
-export class NotiBanner extends Component<{ title: string, time: Date }> {
-    render(): React.ReactNode {
-        return (
-            <ViewRowBetweenCenter style={[styles.w100, styles.padding2vw, { borderBottomWidth: 1, borderColor: clrStyle.grey2 }]}>
-                <ViewRow style={[styles.flex1]}>
-                    <View style={[styles.paddingRight2vw, styles.marginRight2vw, { borderRightWidth: 1, borderColor: clrStyle.grey1 }]}><CTEXT.Nunito14Reg>{this.props.time.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</CTEXT.Nunito14Reg></View>
-                    <CTEXT.Nunito14Reg>{this.props.title}</CTEXT.Nunito14Reg>
-                </ViewRow>
-                {
-                    this.props.title.toLowerCase().includes('tưới') ?
-                        SVG.wateringYellow(vw(9), vw(9))
-                        : this.props.title.toLowerCase().includes('bón') ?
-                            SVG.manure(vw(9), vw(9)) : SVG.changeMug(vw(9), vw(9))
-                }
-            </ViewRowBetweenCenter>
         )
     }
 }
