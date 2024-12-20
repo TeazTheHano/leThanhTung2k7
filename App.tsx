@@ -10,7 +10,7 @@ import { ColorValue } from 'react-native';
 // screen import
 import Onboarding from './screens/Onboarding';
 import Login from './screens/Login';
-import AfterSign from './screens/AfterSign';
+import PinCreate from './screens/PinCreate';
 import AddAccount from './screens/AddAccount';
 import BottomTab from './assets/BottomTab';
 import Home from './screens/Home';
@@ -24,11 +24,11 @@ function App(): React.JSX.Element {
     <ProviderTotal>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: { backgroundColor: clrStyle.white as ColorValue } }}>
+          <Stack.Screen name="PinCreate" component={PinCreate} />
           <Stack.Screen name="BottomTab" component={BottomTab} />
 
           <Stack.Screen name="Onboarding" component={Onboarding} />
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="AfterSign" component={AfterSign} />
           <Stack.Screen name="AddAccount" component={AddAccount} />
 
           <Stack.Screen name="Home" component={Home} />

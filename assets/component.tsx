@@ -201,7 +201,7 @@ export function formatNumber(num: number, changeToChar: boolean = true) {
 export async function LoginWithFirebaseHandle(
     email: string,
     password: string,
-    navigation: any,
+    navigation: () => void,
     signInWithEmailAndPassword: (auth: any, email: string, password: string) => Promise<any>,
     auth: any,
     dispatch: (action: any) => void,
@@ -229,10 +229,7 @@ export async function LoginWithFirebaseHandle(
 
             saveUserToLocal(userObj);
             dispatch(currentSetUser(userObj));
-
-            if (navigation) {
-                navigation.navigate('BottomTab');
-            }
+            navigation ? navigation() : null;
             return true;
         } else {
             Alert.alert('Email hoặc mật khẩu bạn nhập chưa đúng');
@@ -264,62 +261,49 @@ export async function LoginWithFirebaseHandle(
  * @throws Will throw an error if the registration process fails.
  */
 export async function RegisterWithFirebaseHandle(
-    navigation: any,
+    navigation: () => void,
     createUserWithEmailAndPassword: (auth: any, email: string, password: string) => Promise<any>,
     updateProfile: (user: any, profile: any) => Promise<any>,
     auth: any,
     dispatch: (action: any) => void,
-    currentSetUser: (user: any) => any,
-    saveUserToLocal: (user: any) => void,
+    setCurrentUser: (user: any) => any,
+    saveUserToLocal: (user: any) => Promise<boolean>,
     email: string,
     userName: string,
     password: string,
-    ...params: { [key: string]: any }[]
-) {
+    avtURL = '',
+): Promise<void> {
     try {
-        // TODO: firebase auth
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                let user = auth.currentUser;
-                const avtURL = params.find(param => param.hasOwnProperty('avtURL'))?.avtURL || '';
-                if (user && avtURL) {
-                    updateProfile(user, {
-                        displayName: userName,
-                        photoURL: avtURL,
-                    })
-                        .then(() => {
-                            console.log("User profile updated.");
-                        })
-                        .catch((error) => {
-                            console.error("Error updating profile:", error);
-                        });
-                }
-            })
-            .then(() => {
-                /**
-                 * Creates a user object with the provided email, name, password, and additional parameters.
-                 *
-                 * @param {string} email - The email of the user.
-                 * @param {string} userName - The name of the user.
-                 * @param {string} password - The password of the user.
-                 * @param {Array<Object>} params - An array of additional parameters to be merged into the user object.
-                 * @returns {Object} The user object containing email, name, password, and additional parameters.
-                 */
-                let user = {
-                    email: email,
-                    name: userName,
-                    password: password,
-                    ...params.reduce((acc, param) => ({ ...acc, ...param }), {})
-                }
-                saveUserToLocal(user)
-                dispatch(currentSetUser(user));
-            })
-            .then(() => {
-                return navigation?.navigate('BottomTab') ?? true
-            })
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        if (user) {
+            await updateProfile(user, {
+                displayName: userName,
+                photoURL: avtURL,
+            });
+        }
+
+        const userObj = {
+            email,
+            name: userName,
+            password,
+            avtURL,
+        };
+
+        await saveUserToLocal(userObj).then((res) => {
+            if (res) {
+                dispatch(setCurrentUser(userObj));
+                console.log('Save user to local success');
+                navigation ? navigation() : null;
+            } else {
+                console.log('Save user to local failed');
+            }
+        });
 
     } catch (error) {
-        console.log(error)
+        console.error("Registration error:", error);
+        throw new Error("Registration process failed");
     }
 }
 

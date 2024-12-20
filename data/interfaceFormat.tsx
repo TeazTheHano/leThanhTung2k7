@@ -11,6 +11,7 @@ export interface StorageItem {
 export interface UserFormat {
     name: string;
     email: string;
+    pinCode: number[];
 }
 
 export interface WalletFormat {

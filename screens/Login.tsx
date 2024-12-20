@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, SafeAreaView, TouchableOpacity, Platform } from 'react-native'
+import { View, Text, ImageBackground, SafeAreaView, TouchableOpacity, Platform, Alert } from 'react-native'
 import React, { useState } from 'react'
 import styles, { vw } from '../assets/stylesheet'
 import { useNavigation } from '@react-navigation/native'
@@ -6,10 +6,16 @@ import { BoardingInput, BoardingInputWithInlineIcon, RoundBtn, TopNav, ViewColCe
 import { Body1, Body3, Title3 } from '../assets/CustomText'
 import clrStyle from '../assets/componentStyleSheet'
 import { checkedBoxRound, googleLogo, unCheckBoxRound } from '../assets/svgXml'
+import { LoginWithFirebaseHandle, RegisterWithFirebaseHandle } from '../assets/component'
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { currentSetUser, RootContext } from '../data/store'
+import { storageSaveUser } from '../data/storageFunc'
 
 export default function Login({ route }: any) {
   const navigation = useNavigation()
+  const [CurrentCache, dispatch] = React.useContext(RootContext)
   const { kind } = route.params
+  let auth = getAuth()
 
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -47,6 +53,7 @@ export default function Login({ route }: any) {
             placeholder='Email'
             value={email}
             onChgText={(val) => setEmail(val.toString())}
+            autoCap='none'
             textClass={Body1}
             activeColor={clrStyle.grey80}
             // passiveColor='#E1E1E1'
@@ -59,6 +66,7 @@ export default function Login({ route }: any) {
             onChgText={(val) => setPassword(val.toString())}
             textClass={Body1}
             activeColor={clrStyle.grey80}
+            autoCap='none'
             // passiveColor='#E1E1E1'
             passiveColor={clrStyle.grey80}
             CustomStyleClass={[styles.w100, styles.bgcolorWhite, styles.border1, styles.paddingH4vw, styles.paddingV3vw, styles.borderRadius4vw, { borderColor: '#E1E1E1' }]}
@@ -83,7 +91,37 @@ export default function Login({ route }: any) {
               ]}
               textClass={Title3}
               textColor='white'
-              onPress={() => { }}
+              onPress={() => {
+                if (isAccept) {
+                  if (kind && kind === 'login') {
+                    LoginWithFirebaseHandle(
+                      email,
+                      password,
+                      () => navigation.navigate('PinCreate', { type: 'register' }),
+                      signInWithEmailAndPassword,
+                      auth,
+                      dispatch,
+                      currentSetUser,
+                      storageSaveUser
+                    )
+                  } else {
+                    RegisterWithFirebaseHandle(
+                      () => navigation.navigate('PinCreate', { type: 'register' }),
+                      createUserWithEmailAndPassword,
+                      updateProfile,
+                      auth,
+                      dispatch,
+                      currentSetUser,
+                      storageSaveUser,
+                      email,
+                      userName,
+                      password
+                    )
+                  }
+                } else {
+                  Alert.alert('Please accept Terms of Service and Privacy Policy')
+                }
+              }}
             />
             <Text style={[{ fontFamily: 'Inter-Bold', fontWeight: 'bold', fontSize: vw(3.5) }]}>or</Text>
             <RoundBtn
@@ -96,7 +134,7 @@ export default function Login({ route }: any) {
               ]}
               textClass={Title3}
               icon={googleLogo(vw(6), vw(6))}
-              onPress={() => { }}
+              onPress={() => { Alert.alert('Feature is in development') }}
             />
           </ViewColCenter>
           <TouchableOpacity onPress={() => navigation.navigate('Login', { kind: kind == 'login' ? 'signup' : 'login' })}>
