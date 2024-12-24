@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, TextStyle } from "react-native";
 import { vw } from "./stylesheet";
 
-export class Tiny extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Tiny extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -15,7 +15,7 @@ export class Tiny extends Component<{ children: React.ReactNode, style?: TextSty
     }
 }
 
-export class Small extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Small extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -28,7 +28,7 @@ export class Small extends Component<{ children: React.ReactNode, style?: TextSt
     }
 }
 
-export class SubtitleCard extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class SubtitleCard extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -41,7 +41,7 @@ export class SubtitleCard extends Component<{ children: React.ReactNode, style?:
     }
 }
 
-export class Body3 extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Body3 extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -54,7 +54,7 @@ export class Body3 extends Component<{ children: React.ReactNode, style?: TextSt
     }
 }
 
-export class Body2 extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Body2 extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -67,7 +67,7 @@ export class Body2 extends Component<{ children: React.ReactNode, style?: TextSt
     }
 }
 
-export class Body1 extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Body1 extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -80,7 +80,7 @@ export class Body1 extends Component<{ children: React.ReactNode, style?: TextSt
     }
 }
 
-export class Title3 extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Title3 extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -93,7 +93,7 @@ export class Title3 extends Component<{ children: React.ReactNode, style?: TextS
     }
 }
 
-export class Title2 extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Title2 extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -106,7 +106,7 @@ export class Title2 extends Component<{ children: React.ReactNode, style?: TextS
     }
 }
 
-export class Title1 extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class Title1 extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 
@@ -119,7 +119,7 @@ export class Title1 extends Component<{ children: React.ReactNode, style?: TextS
     }
 }
 
-export class TitleX extends Component<{ children: React.ReactNode, style?: TextStyle | any, lineNumber?: number, color?: string }> {
+export class TitleX extends Component<{ children: React.ReactNode, style?: TextStyle[] | any, lineNumber?: number, color?: string }> {
     render() {
         const { color, children, style, lineNumber } = this.props;
 

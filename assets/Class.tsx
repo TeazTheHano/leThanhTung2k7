@@ -1,6 +1,6 @@
 // system import
 import React, { Component, ComponentType, useMemo, useState } from 'react';
-import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle, TextStyle, FlexStyle } from 'react-native';
+import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle, TextStyle, FlexStyle, Keyboard } from 'react-native';
 
 // style import
 import styles from './stylesheet';
@@ -580,73 +580,155 @@ export class ProcessBarSelfMade extends Component<{
     }
 }
 
-// export class SectionTitleAndRightArrow extends Component<{
-//     title: string,
-//     titleFontClass?: ComponentType<{ children: React.ReactNode }>,
-//     fnc: () => void,
-//     titleColor?: string,
-//     arrowColor?: string,
-// }> {
-//     render() {
-//         const { title, fnc, titleColor, arrowColor } = this.props;
-//         const TitleFontClass = this.props.titleFontClass ? this.props.titleFontClass : Inter16Bold;
-//         return (
-//             <ViewRowBetweenCenter style={[styles.paddingH6vw, styles.paddingV2vw]}>
-//                 <TitleFontClass style={[{ color: titleColor ? titleColor : clrStyle.black }]}>{title}</TitleFontClass>
-//                 <TouchableOpacity onPress={fnc}>
-//                     {SVG.sharpRightArrow(vw(6), vw(6), arrowColor ? arrowColor : clrStyle.black)}
-//                 </TouchableOpacity>
-//             </ViewRowBetweenCenter>
-//         )
-//     }
-// }
+export class DatalistInput extends Component<{
+    label?: string;
+    options: string[];
+    placeholder?: string;
+    onSelect: (option: string) => void;
+    enableScroll?: boolean;
+    multiLine?: boolean;
+    TextClass?: React.ComponentType<{ children: React.ReactNode }>;
+    extendIcon?: React.ReactNode;
+    CustomStyle?: {
+        classStyle?: ViewStyle[] | FlexStyle[];
+        dropdownStyle?: ViewStyle[] | FlexStyle[];
+        dropdownItemStyle?: ViewStyle[] | FlexStyle[];
+        inputStyle?: ViewStyle[] | FlexStyle[];
+        textStyle?: TextStyle[];
+    };
+}> {
+    state = {
+        inputValue: '',
+        showDropdown: false,
+    };
 
-// export class TopNav3ItemWithTitle extends Component<{
-//     title: string,
-//     icon: any,
-//     fnc: () => void,
-//     customStyle?: any,
-//     nav: any,
-// }> {
-//     render() {
-//         const { title, icon, fnc, customStyle, nav } = this.props;
-//         return (
-//             <ViewRowBetweenCenter style={[styles.w100, styles.paddingH6vw]}>
-//                 <TouchableOpacity onPress={() => nav.goBack()}>
-//                     {SVG.sharpLeftArrow(vw(6), vw(6), clrStyle.black)}
-//                 </TouchableOpacity>
-//                 <Inter20Bold style={[styles.paddingH2vw, styles.textCenter, { color: clrStyle.black }]}>{title}</Inter20Bold>
-//                 <TouchableOpacity onPress={fnc} style={[styles.padding2vw]}>
-//                     {icon}
-//                 </TouchableOpacity>
-//             </ViewRowBetweenCenter>
-//         )
-//     }
-// }
+    // Filters options based on the input text
+    filterOptions = (text: string) => {
+        const { options } = this.props;
+        return options.filter((option) =>
+            option.toLowerCase().includes(text.toLowerCase())
+        );
+    };
+
+    // Handles input change and updates dropdown visibility
+    handleInputChange = (text: string) => {
+        this.setState({
+            inputValue: text,
+            showDropdown: text.length > 0,
+        });
+        this.props.onSelect(text); // Pass free text to the parent
+    };
+
+    // Handles dropdown item selection
+    handleOptionSelect = (option: string) => {
+        Keyboard.dismiss(); // Dismiss the keyboard to prevent TextInput blur
+        this.setState(
+            {
+                inputValue: option,
+                showDropdown: false,
+            },
+            () => {
+                this.props.onSelect(option); // Notify parent of the selected value
+            }
+        );
+    };
+
+    // Manages dropdown visibility on blur
+    handleBlur = () => {
+        // Delay dropdown hiding to allow dropdown item press
+        setTimeout(() => {
+            if (!this.state.inputValue) {
+                this.setState({ showDropdown: false });
+            }
+        }, 100);
+    };
+
+    // Renders the dropdown list
+    renderDropdown = (filteredOptions: string[]) => {
+        const { CustomStyle, TextClass } = this.props;
+        const CTEXT = TextClass || Text;
 
 
-// export const Input: React.FC<{
-//     value: string
-//     onChange: (text: string) => void
-//     placeHolder?: string
-//     icon?: any
-//     otherOption?: TextInputProps
-// }> = ({ value, onChange, placeHolder, icon, otherOption }) => {
-//     return (
-//         <ViewRowStartCenter style={[styles.border2, styles.borderRadius2vw, styles.paddingV2vw, styles.paddingH4vw, { borderColor: getColor('Grey/40') }]}>
-//             {icon}
-//             <TextInput
-//                 placeholderTextColor={getColor('Grey/100')}
-//                 onChangeText={onChange}
-//                 placeholder={placeHolder}
-//                 style={[styles.padding2vw, styles.marginLeft2vw, styles.flex1,]}
-//                 {...otherOption}
-//             >
-//                 <CTEXT.Be16Reg style={{ color: clrStyle.black }}>{value}</CTEXT.Be16Reg>
-//             </TextInput>
-//         </ViewRowStartCenter>
-//     )
-// }
+        if (!this.state.showDropdown || filteredOptions.length === 0) {
+            return null;
+        }
+
+        return (
+            <FlatList
+                style={CustomStyle?.dropdownStyle}
+                data={filteredOptions}
+                scrollEnabled={this.props.enableScroll}
+                keyboardShouldPersistTaps="handled" // Ensure taps are registered
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        style={CustomStyle?.dropdownItemStyle}
+                        onPress={() => this.handleOptionSelect(item)}
+                    >
+                        <CTEXT style={CustomStyle?.textStyle}>{item}</CTEXT>
+                    </TouchableOpacity>
+                )}
+            />
+        );
+    };
+
+
+
+    render() {
+        const rotateAnimation = new Animated.Value(0);
+
+        const startRotateAnimation = () => {
+            Animated.timing(rotateAnimation, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: true,
+                easing: Easing.linear,
+            }).start();
+        };
+
+        const rotateInterpolate = rotateAnimation.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '180deg'],
+        });
+
+        const { label, placeholder, CustomStyle, TextClass, multiLine } = this.props;
+        const { inputValue } = this.state;
+        const Font = TextClass || Text;
+
+        const filteredOptions = this.filterOptions(inputValue);
+
+        return (
+            <View style={CustomStyle?.classStyle}>
+                {label && <Font style={CustomStyle?.textStyle}>{label}</Font>}
+                <ViewRowBetweenCenter>
+                    <TextInput
+                        style={CustomStyle?.inputStyle}
+                        value={inputValue}
+                        placeholder={placeholder || 'Type to search...'}
+                        onChangeText={this.handleInputChange}
+                        onBlur={this.handleBlur}
+                        multiline={multiLine}
+                    />
+                    {
+                        this.props.extendIcon ?
+                            <TouchableOpacity
+                                onPress={() => {
+                                    startRotateAnimation();
+                                    this.setState({ showDropdown: !this.state.showDropdown });
+                                }}
+                            >
+                                <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+                                    {this.props.extendIcon}
+                                </Animated.View>
+                            </TouchableOpacity>
+                            : null
+                    }
+                </ViewRowBetweenCenter>
+                {this.renderDropdown(filteredOptions)}
+            </View>
+        );
+    }
+}
 
 export class LowBtn extends Component<{
     title: string,

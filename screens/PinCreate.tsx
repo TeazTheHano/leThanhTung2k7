@@ -6,7 +6,7 @@ import clrStyle from '../assets/componentStyleSheet';
 import { Small, Title3 } from '../assets/CustomText';
 import styles, { vw } from '../assets/stylesheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { storageGetItem, storageGetUser, storageSaveUser } from '../data/storageFunc';
+import { storageGetAllIDfromKey, storageGetItem, storageGetUser, storageSaveUser } from '../data/storageFunc';
 import { UserFormat } from '../data/interfaceFormat';
 
 export default function PinCreate({ route }: any) {
@@ -20,13 +20,28 @@ export default function PinCreate({ route }: any) {
   const [title, setTitle] = React.useState<string>('Enter your PIN');
   const [user, setUser] = React.useState<UserFormat | false>(false);
 
+  const [isNeededToCreateWallet, setIsNeededToCreateWallet] = React.useState(true);
+
+  // 
+  const INDEV = true
+
   useEffect(() => {
     storageGetUser().then((retrievedUser) => {
       if (retrievedUser) {
         setUser(retrievedUser);
         setType(retrievedUser.pinCode ? 'login' : 'register');
+      } else {
+        navigation.navigate('Onboarding' as never);
       }
     });
+    storageGetAllIDfromKey('walletsL').then(res => {
+      console.log(res);
+
+      res && res.length ? setIsNeededToCreateWallet(false) : setIsNeededToCreateWallet(true);
+    })
+    if (INDEV) {
+      navigation.navigate((isNeededToCreateWallet ? 'AddAccount' : 'BottomTab') as never);
+    }
   }, []);
 
   const ownNumpad = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 0, 12];
@@ -42,7 +57,7 @@ export default function PinCreate({ route }: any) {
         setFncType('confirm');
       } else {
         if (user && user.pinCode?.every((num, i) => num === pinCode[i])) {
-          navigation.navigate('BottomTab' as never);
+          navigation.navigate((isNeededToCreateWallet ? 'AddAccount' : 'BottomTab') as never);
         } else {
           Alert.alert('PIN code does not match. Please try again.');
         }
@@ -52,7 +67,7 @@ export default function PinCreate({ route }: any) {
         const retrievedUser = await storageGetUser();
         if (retrievedUser) {
           const saveResult = await storageSaveUser({ ...retrievedUser, pinCode });
-          if (saveResult) navigation.navigate('BottomTab' as never);
+          if (saveResult) navigation.navigate((isNeededToCreateWallet ? 'AddAccount' : 'BottomTab') as never);
         }
       } else {
         resetPin();

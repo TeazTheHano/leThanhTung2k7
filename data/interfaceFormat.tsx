@@ -1,11 +1,11 @@
 export interface StorageItem {
     user: UserFormat,
 
-    wallets: WalletFormat[];
-    balance: number;
-    transferences: TransferenceFormat[];
-    budgets: BudgetFormat[];
-    categories: CategoryFormat[];
+    walletsL: WalletFormat;
+    balanceL: number;
+    transferencesL: TransferenceFormat;
+    budgetsL: BudgetFormat;
+    categoriesL: CategoryFormat;
 }
 
 export interface UserFormat {

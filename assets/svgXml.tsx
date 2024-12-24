@@ -110,6 +110,36 @@ export const curveRightArrow = (w: any = '100%', h: any = '100%', color: any = '
     );
 }
 
+export const sharpDownArrow = (w: any = '100%', h: any = '100%', color?:any) => {
+    const xml = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_1803_7104" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<rect y="24" width="24" height="24" transform="rotate(-90 0 24)" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_1803_7104)">
+<path d="M22 8L12 18L2 8L3.775 6.225L12 14.45L20.225 6.225L22 8Z" fill="white"/>
+</g>
+</svg>
+`
+    return (
+        <SvgXml xml={xml} width={w} height={h} />
+    )
+}
+
+export const sharpUpArrow = (w: any = '100%', h: any = '100%', color?:any) => {
+    const xml = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_1803_7104" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<rect x="24" width="24" height="24" transform="rotate(90 24 0)" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_1803_7104)">
+<path d="M2 16L12 6L22 16L20.225 17.775L12 9.55L3.775 17.775L2 16Z" fill="white"/>
+</g>
+</svg>
+`
+    return (
+        <SvgXml xml={xml} width={w} height={h} />
+    )
+}
+
 // search
 export const xIcon = (w: any = '100%', h: any = '100%', color: any = "#808797") => {
     const xml = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
