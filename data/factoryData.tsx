@@ -16,3 +16,5 @@ export const DATAcurrency: CurrencyFormat[] = [
     { name: 'Vietnamese Dong', symbol: '₫' },
     { name: 'South Korean Won', symbol: '₩' },
 ]
+
+export const DATAmonthList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

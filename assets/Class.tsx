@@ -1,6 +1,6 @@
 // system import
 import React, { Component, ComponentType, useMemo, useRef, useState } from 'react';
-import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle, TextStyle, FlexStyle, Keyboard } from 'react-native';
+import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle, TextStyle, FlexStyle, Keyboard, LayoutChangeEvent } from 'react-native';
 
 // style import
 import styles from './stylesheet';
@@ -75,7 +75,7 @@ export class SaveViewWithColorStatusBar extends Component<{ children?: React.Rea
     }
 }
 
-export class ViewRow extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewRow extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexRow, this.props.style]}>
@@ -85,7 +85,7 @@ export class ViewRow extends Component<{ children?: React.ReactNode, style?: Vie
     }
 }
 
-export class ViewCol extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewCol extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexCol, this.props.style]}>
@@ -95,7 +95,7 @@ export class ViewCol extends Component<{ children?: React.ReactNode, style?: Vie
     }
 }
 
-export class ViewRowCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewRowCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexRowCenter, this.props.style]}>
@@ -105,7 +105,7 @@ export class ViewRowCenter extends Component<{ children?: React.ReactNode, style
     }
 }
 
-export class ViewColCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewColCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexColCenter, this.props.style]}>
@@ -115,7 +115,7 @@ export class ViewColCenter extends Component<{ children?: React.ReactNode, style
     }
 }
 
-export class ViewRowBetweenCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewRowBetweenCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexRowBetweenCenter, this.props.style]}>
@@ -125,7 +125,7 @@ export class ViewRowBetweenCenter extends Component<{ children?: React.ReactNode
     }
 }
 
-export class ViewColBetweenCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewColBetweenCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexColBetweenCenter, this.props.style]}>
@@ -135,7 +135,7 @@ export class ViewColBetweenCenter extends Component<{ children?: React.ReactNode
     }
 }
 
-export class ViewRowEvenlyCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewRowEvenlyCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexRowEvenlyCenter, this.props.style]}>
@@ -145,7 +145,7 @@ export class ViewRowEvenlyCenter extends Component<{ children?: React.ReactNode,
     }
 }
 
-export class ViewColEvenlyCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewColEvenlyCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexColEvenlyCenter, this.props.style]}>
@@ -155,7 +155,7 @@ export class ViewColEvenlyCenter extends Component<{ children?: React.ReactNode,
     }
 }
 
-export class ViewColEndCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewColEndCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexColEndCenter, this.props.style]}>
@@ -165,7 +165,7 @@ export class ViewColEndCenter extends Component<{ children?: React.ReactNode, st
     }
 }
 
-export class ViewRowStartCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewRowStartCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexRowStartCenter, this.props.style]}>
@@ -175,7 +175,7 @@ export class ViewRowStartCenter extends Component<{ children?: React.ReactNode, 
     }
 }
 
-export class ViewColStartCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewColStartCenter extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexColStartCenter, this.props.style]}>
@@ -185,7 +185,7 @@ export class ViewColStartCenter extends Component<{ children?: React.ReactNode, 
     }
 }
 
-export class ViewColStartBetween extends Component<{ children?: React.ReactNode, style?: ViewStyle[] }> {
+export class ViewColStartBetween extends Component<{ children?: React.ReactNode, style?: ViewStyle[] | FlexStyle[] | undefined }> {
     render() {
         return (
             <View style={[styles.flexCol, styles.justifyContentSpaceBetween, this.props.style]}>
@@ -730,6 +730,127 @@ export class DatalistInput extends Component<{
     }
 }
 
+export class SelectorInput extends Component<{
+    label?: string;
+    options: string[];
+    onSelect: (option: string) => void;
+    defaultValue?: string;
+    enableScroll?: boolean;
+    multiLine?: boolean;
+    TextClass?: React.ComponentType<{ children: React.ReactNode }>;
+    extendIcon?: React.ReactNode;
+    extendAnimationSrc: Animated.Value;
+    CustomStyle?: {
+        classStyle?: ViewStyle[] | FlexStyle[];
+        dropdownStyle?: ViewStyle[] | FlexStyle[];
+        dropdownItemStyle?: ViewStyle[] | FlexStyle[];
+        textStyle?: TextStyle[];
+    };
+}> {
+    state = {
+        inputValue: '',
+        showDropdown: false,
+    };
+
+    // Handles dropdown item selection
+    handleOptionSelect = (option: string) => {
+        Keyboard.dismiss(); // Dismiss the keyboard to prevent TextInput blur
+        this.setState(
+            {
+                inputValue: option,
+                showDropdown: false,
+            },
+            () => {
+                this.props.onSelect(option); // Notify parent of the selected value
+            }
+        );
+    };
+
+    // Manages dropdown visibility on blur
+    handleBlur = () => {
+        // Delay dropdown hiding to allow dropdown item press
+        setTimeout(() => {
+            if (!this.state.inputValue) {
+                this.setState({ showDropdown: false });
+            }
+        }, 100);
+    };
+
+    // Renders the dropdown list
+    renderDropdown = (filteredOptions: string[]) => {
+        const { CustomStyle, TextClass } = this.props;
+        const CTEXT = TextClass || Text;
+
+
+        if (!this.state.showDropdown || filteredOptions.length === 0) {
+            return null;
+        }
+
+        return (
+            <FlatList
+                style={CustomStyle?.dropdownStyle}
+                data={filteredOptions}
+                scrollEnabled={this.props.enableScroll}
+                keyboardShouldPersistTaps="handled" // Ensure taps are registered
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        style={CustomStyle?.dropdownItemStyle}
+                        onPress={() => this.handleOptionSelect(item)}
+                    >
+                        <CTEXT style={CustomStyle?.textStyle}>{item}</CTEXT>
+                    </TouchableOpacity>
+                )}
+            />
+        );
+    };
+
+
+
+    render() {
+        const rotateInterpolate = this.props.extendAnimationSrc.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '180deg'],
+        });
+
+        const startRotateAnimation = () => {
+            Animated.timing(this.props.extendAnimationSrc, {
+                toValue: !this.state.showDropdown ? 1 : 0,
+                duration: 500,
+                useNativeDriver: false,
+                easing: Easing.linear,
+            }).start();
+        };
+
+        const { label, CustomStyle, TextClass } = this.props;
+        const { inputValue } = this.state;
+        const Font = TextClass || Text;
+
+        const filteredOptions = this.props.options;
+
+        return (
+            <Animated.View style={[CustomStyle?.classStyle]}>
+                {label && <Font style={CustomStyle?.textStyle}>{label}</Font>}
+                <TouchableOpacity
+                    onPress={() => {
+                        startRotateAnimation();
+                        this.setState({ showDropdown: !this.state.showDropdown });
+                    }}
+                >
+                    <ViewRowEvenlyCenter style={[styles.gap1vw]}>
+                        <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+                            {this.props.extendIcon}
+                        </Animated.View>
+                        <Font style={CustomStyle?.textStyle}>{this.props.defaultValue}</Font>
+                    </ViewRowEvenlyCenter>
+                </TouchableOpacity>
+                {this.renderDropdown(filteredOptions)}
+            </Animated.View>
+        );
+    }
+}
+
+
 export class LowBtn extends Component<{
     title: string,
     onPress: () => void,
@@ -1062,3 +1183,89 @@ export class BannerSliderWithCenter extends Component<{
 //         );
 //     }
 // }
+
+// _______ NO REUSE CLASS SECTION _______
+
+export class TopBarWithThingInMiddleAllCustomable extends Component<{
+    centerChildren?: React.ReactNode;
+    leftItem?: React.ReactNode;
+    rightItem?: React.ReactNode;
+
+    returnPreScreenFnc?: () => void;
+    returnPreScreenIcon?: React.ReactNode;
+
+    rightItemFnc?: () => void;
+    rightItemIcon?: React.ReactNode;
+
+    title?: React.ReactNode;
+    TitleTextClass?: React.ComponentType<{ children: React.ReactNode }>;
+
+    style?: {
+        container?: ViewStyle[] | FlexStyle[],
+        leftItemSize?: number,
+        rightItemSize?: number
+        textStyle?: TextStyle[]
+        iconLeftStyle?: ViewStyle[] | FlexStyle[],
+        iconRightStyle?: ViewStyle[] | FlexStyle[],
+    }
+    bgColor?: string
+    textColor?: string
+    iconColor?: string
+}> {
+    state = {
+        leftWidth: 0,
+        rightWidth: 0,
+    };
+
+    onLayoutLeft = (event: LayoutChangeEvent) => {
+        const { width } = event.nativeEvent.layout;
+        this.setState({ leftWidth: width });
+    };
+
+    onLayoutRight = (event: LayoutChangeEvent) => {
+        const { width } = event.nativeEvent.layout;
+        this.setState({ rightWidth: width });
+    };
+
+    render(): React.ReactNode {
+        const { centerChildren, leftItem, rightItem, returnPreScreenFnc, returnPreScreenIcon, rightItemFnc, rightItemIcon, title, TitleTextClass, style, bgColor, textColor, iconColor } = this.props
+        const { leftWidth, rightWidth } = this.state;
+        const TitleClass = TitleTextClass || Text;
+
+        return (
+            <ViewRow style={[{ backgroundColor: bgColor || 'white', zIndex: 10 }, styles.justifyContentSpaceBetween, styles.paddingH4vw, styles.paddingV2vw, styles.gap1vw, style?.container] as ViewStyle[] | FlexStyle[]}>
+                <View key={'TopBarWithThingInMiddleAllCustomable-left'}
+                // onLayout={this.onLayoutLeft}
+                >
+                    {leftItem || (
+                        returnPreScreenFnc ? (
+                            <TouchableOpacity onPress={returnPreScreenFnc}
+                                style={[style?.iconLeftStyle]}>
+                                {returnPreScreenIcon || SVG.sharpLeftArrow(style?.leftItemSize || vw(6), style?.leftItemSize || vw(6), iconColor || clrStyle.black)}
+                            </TouchableOpacity>
+                        ) : null
+                    )}
+                </View>
+                <View key={'TopBarWithThingInMiddleAllCustomable-center'} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    {centerChildren ?
+                        centerChildren :
+                        <TitleClass style={[styles.flex1, styles.textCenter, { color: textColor }, style?.textStyle]}>{title}</TitleClass>
+                    }
+                </View>
+                <View key={'TopBarWithThingInMiddleAllCustomable-right'}
+                // onLayout={this.onLayoutRight}
+                >
+                    {rightItem || (
+                        rightItemFnc ? (
+                            <TouchableOpacity onPress={rightItemFnc}
+                                style={[style?.iconLeftStyle]}>
+                                {rightItemIcon || SVG.sharpRightArrow(style?.rightItemSize || vw(6), style?.rightItemSize || vw(6), iconColor || clrStyle.black)}
+                            </TouchableOpacity>
+                        ) : null
+                    )}
+                </View>
+            </ViewRow>
+        );
+    }
+}
+

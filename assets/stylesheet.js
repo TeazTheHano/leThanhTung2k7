@@ -1478,17 +1478,3 @@ const styles = StyleSheet.create({
 });
 
 export default styles;
-
-function Capitalize(text) {
-    const words = text.split(' ');
-    const CapitalizedWordsArray = [];
-
-    for (let i = 0; i < words.length; i++) {
-        const word = words[i];
-        const CapitalizeWord = word.charAt(0).toUpperCase() + word.substring(1);
-        CapitalizedWordsArray.push(CapitalizeWord);
-    }
-    return CapitalizedWordsArray;
-}
-
-console.log(Capitalize('Chuc mung nam moi'));
