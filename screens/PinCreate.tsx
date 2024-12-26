@@ -36,12 +36,11 @@ export default function PinCreate({ route }: any) {
     });
     storageGetAllIDfromKey('walletsL').then(res => {
       console.log(res);
-
       res && res.length ? setIsNeededToCreateWallet(false) : setIsNeededToCreateWallet(true);
+      if (INDEV) {
+        navigation.navigate((res && res.length ? 'BottomTab' : 'AddAccount') as never);
+      }
     })
-    if (INDEV) {
-      navigation.navigate((isNeededToCreateWallet ? 'AddAccount' : 'BottomTab') as never);
-    }
   }, []);
 
   const ownNumpad = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 0, 12];
@@ -55,12 +54,10 @@ export default function PinCreate({ route }: any) {
         setPinCode([]);
         setTitle('Confirm your PIN');
         setFncType('confirm');
+      } else if (user && user.pinCode?.every((num, i) => num === pinCode[i])) {
+        navigation.navigate((isNeededToCreateWallet ? 'AddAccount' : 'BottomTab') as never);
       } else {
-        if (user && user.pinCode?.every((num, i) => num === pinCode[i])) {
-          navigation.navigate((isNeededToCreateWallet ? 'AddAccount' : 'BottomTab') as never);
-        } else {
-          Alert.alert('PIN code does not match. Please try again.');
-        }
+        Alert.alert('PIN code does not match. Please try again.');
       }
     } else if (fncType === 'confirm') {
       if (pinCode.every((num, i) => num === pinCodeConfirm[i])) {

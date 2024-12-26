@@ -1,5 +1,5 @@
 // system import
-import React, { Component, ComponentType, useMemo, useState } from 'react';
+import React, { Component, ComponentType, useMemo, useRef, useState } from 'react';
 import { ImageBackground, Platform, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Image, ImageStyle, StatusBarStyle, ReturnKeyType, KeyboardType, FlatList, TextInputProps, Animated, Easing, TouchableOpacityProps, ViewProps, ViewStyle, TextStyle, FlexStyle, Keyboard } from 'react-native';
 
 // style import
@@ -589,6 +589,7 @@ export class DatalistInput extends Component<{
     multiLine?: boolean;
     TextClass?: React.ComponentType<{ children: React.ReactNode }>;
     extendIcon?: React.ReactNode;
+    extendAnimationSrc: Animated.Value;
     CustomStyle?: {
         classStyle?: ViewStyle[] | FlexStyle[];
         dropdownStyle?: ViewStyle[] | FlexStyle[];
@@ -675,21 +676,19 @@ export class DatalistInput extends Component<{
 
 
     render() {
-        const rotateAnimation = new Animated.Value(0);
+        const rotateInterpolate = this.props.extendAnimationSrc.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '180deg'],
+        });
 
         const startRotateAnimation = () => {
-            Animated.timing(rotateAnimation, {
-                toValue: 1,
+            Animated.timing(this.props.extendAnimationSrc, {
+                toValue: !this.state.showDropdown ? 1 : 0,
                 duration: 500,
                 useNativeDriver: true,
                 easing: Easing.linear,
             }).start();
         };
-
-        const rotateInterpolate = rotateAnimation.interpolate({
-            inputRange: [0, 1],
-            outputRange: ['0deg', '180deg'],
-        });
 
         const { label, placeholder, CustomStyle, TextClass, multiLine } = this.props;
         const { inputValue } = this.state;
@@ -705,6 +704,7 @@ export class DatalistInput extends Component<{
                         style={CustomStyle?.inputStyle}
                         value={inputValue}
                         placeholder={placeholder || 'Type to search...'}
+                        placeholderTextColor={CustomStyle?.textStyle?.[0]?.color || 'gray'}
                         onChangeText={this.handleInputChange}
                         onBlur={this.handleBlur}
                         multiline={multiLine}

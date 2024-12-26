@@ -19,6 +19,8 @@ export interface WalletFormat {
     amount: number;
     // TODO: add currency in future feature
     sourceOfMoney: string;
+    currency: CurrencyFormat['name'];
+    currencySymbol: CurrencyFormat['symbol'];
 }
 
 export interface TransferenceFormat {
@@ -42,4 +44,9 @@ export interface CategoryFormat {
     name: string;
     kind: 'in' | 'out';
     img: any;
+}
+
+export interface CurrencyFormat {
+    name: string;
+    symbol: string;
 }
